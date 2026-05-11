@@ -30,6 +30,7 @@ const (
 	spotifyLinksKey         = "spotifylinks"
 	caaEnabledKey           = "caaenabled"
 	uguuEnabledKey          = "uguuenabled"
+	playerNameKey          = "playername"
 )
 
 const (
@@ -150,6 +151,12 @@ func (p *discordPlugin) Scrobble(_ scrobbler.ScrobbleRequest) error {
 // PlaybackReport handles playback state reports from Navidrome.
 func (p *discordPlugin) PlaybackReport(input scrobbler.PlaybackReportRequest) error {
 	pdk.Log(pdk.LogDebug, fmt.Sprintf("PlaybackReport request: %s", formatRequest(input)))
+
+	if !isPlayerAllowed(input.PlayerName) {
+		pdk.Log(pdk.LogInfo, fmt.Sprintf("Player %q not in allowed list, skipping", input.PlayerName))
+		return nil
+	}
+
 	switch input.State {
 	case statePlaying:
 		return p.handlePlayingOrPaused(input)
@@ -160,6 +167,14 @@ func (p *discordPlugin) PlaybackReport(input scrobbler.PlaybackReportRequest) er
 	default:
 		return nil
 	}
+}
+
+func isPlayerAllowed(playerName string) bool {
+	allowedPlayer, ok := pdk.GetConfig(playerNameKey)
+	if !ok || allowedPlayer == "" {
+		return true
+	}
+	return playerName == allowedPlayer
 }
 
 func formatRequest(input scrobbler.PlaybackReportRequest) string {
