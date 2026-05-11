@@ -10,9 +10,10 @@ test:
 
 build:
 ifdef TINYGO
+  # for some reason buildvcs doesn't work with tinygo...
 	tinygo build -opt=2 -scheduler=none -no-debug -o $(WASM_FILE) -target wasip1 -buildmode=c-shared .
 else
-	GOOS=wasip1 GOARCH=wasm go build -buildmode=c-shared -o $(WASM_FILE) .
+	GOOS=wasip1 GOARCH=wasm go build -buildvcs=false -buildmode=c-shared -o $(WASM_FILE) .
 endif
 
 
@@ -27,3 +28,7 @@ release:
 	gh workflow run create-release.yml -f version=$${V} -f beta=$(BETA)
 	@echo "Release v$${V}$$(if [ -n "$(BETA)" ] && [ "$(BETA)" != "0" ]; then echo -beta-$(BETA); fi) workflow triggered. Check progress: gh run list --workflow=create-release.yml"
 .PHONY: release
+
+
+windows:
+	wsl -u root bash -lc "make build && make package"

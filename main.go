@@ -31,6 +31,7 @@ const (
 	caaEnabledKey           = "caaenabled"
 	uguuEnabledKey          = "uguuenabled"
 	playerNameKey          = "playername"
+	statusDisplayTypeKey   = "statusdisplaytype"
 )
 
 const (
@@ -57,6 +58,13 @@ const (
 	activityNameArtist  = "Artist"
 	activityNameAlbum   = "Album"
 	activityNameCustom  = "Custom"
+)
+
+// Status display type options (must match Discord's status_display_type values)
+const (
+	statusDisplayTypeName    = "Artist"
+	statusDisplayTypeState  = "Selected Name Display"
+	statusDisplayTypeDetails = "Song"
 )
 
 // userToken represents a user-token mapping from the config
@@ -271,14 +279,15 @@ func connectUser(username string) (clientID, token string, err error) {
 }
 
 func resolveActivityName(track scrobbler.TrackInfo) (string, int) {
+	displayType := getStatusDisplayType()
 	activityNameOption, _ := pdk.GetConfig(activityNameKey)
 	switch activityNameOption {
 	case activityNameTrack:
-		return track.Title, statusDisplayName
+		return track.Title, displayType
 	case activityNameAlbum:
-		return track.Album, statusDisplayName
+		return track.Album, displayType
 	case activityNameArtist:
-		return track.Artist, statusDisplayName
+		return track.Artist, displayType
 	case activityNameCustom:
 		template, _ := pdk.GetConfig(activityNameTemplateKey)
 		if template != "" {
@@ -287,10 +296,21 @@ func resolveActivityName(track scrobbler.TrackInfo) (string, int) {
 				"{artist}", track.Artist,
 				"{album}", track.Album,
 			)
-			return r.Replace(template), statusDisplayName
+			return r.Replace(template), displayType
 		}
 	}
-	return "Navidrome", statusDisplayDetails
+	return "Navidrome", displayType
+}
+
+func getStatusDisplayType() int {
+	displayTypeOption, _ := pdk.GetConfig(statusDisplayTypeKey)
+	switch displayTypeOption {
+	case statusDisplayTypeState:
+		return 1
+	case statusDisplayTypeDetails:
+		return 2
+	}
+	return 0
 }
 
 func resolveSpotifyLinks(track scrobbler.TrackInfo) (string, string) {

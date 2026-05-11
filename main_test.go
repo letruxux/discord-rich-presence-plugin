@@ -141,6 +141,8 @@ var _ = Describe("discordPlugin", func() {
 			pdk.PDKMock.On("GetConfig", uguuEnabledKey).Return("", false)
 			pdk.PDKMock.On("GetConfig", caaEnabledKey).Return("", false)
 			pdk.PDKMock.On("GetConfig", activityNameKey).Return("", false)
+			pdk.PDKMock.On("GetConfig", activityNameTemplateKey).Return("", false)
+			pdk.PDKMock.On("GetConfig", statusDisplayTypeKey).Return("", false)
 			pdk.PDKMock.On("GetConfig", spotifyLinksKey).Return("", false)
 			pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
 		}
@@ -279,6 +281,8 @@ var _ = Describe("discordPlugin", func() {
 				pdk.PDKMock.On("GetConfig", uguuEnabledKey).Return("", false)
 				pdk.PDKMock.On("GetConfig", caaEnabledKey).Return("", false)
 				pdk.PDKMock.On("GetConfig", activityNameKey).Return(configValue, configExists)
+				pdk.PDKMock.On("GetConfig", activityNameTemplateKey).Return("", false)
+				pdk.PDKMock.On("GetConfig", statusDisplayTypeKey).Return("", false)
 				pdk.PDKMock.On("GetConfig", spotifyLinksKey).Return("", false)
 				pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
 
@@ -295,8 +299,8 @@ var _ = Describe("discordPlugin", func() {
 				Expect(sentPayload).To(ContainSubstring(fmt.Sprintf(`"name":"%s"`, expectedName)))
 				Expect(sentPayload).To(ContainSubstring(fmt.Sprintf(`"status_display_type":%d`, expectedDisplayType)))
 			},
-			Entry("defaults to Navidrome when not configured", "", false, "Navidrome", 2),
-			Entry("defaults to Navidrome with explicit default value", "Default", true, "Navidrome", 2),
+			Entry("defaults to Navidrome when not configured", "", false, "Navidrome", 0),
+			Entry("defaults to Navidrome with explicit default value", "Default", true, "Navidrome", 0),
 			Entry("uses track title when configured", "Track", true, "Test Song", 0),
 			Entry("uses track album when configured", "Album", true, "Test Album", 0),
 			Entry("uses track artist when configured", "Artist", true, "Test Artist", 0),
@@ -310,6 +314,7 @@ var _ = Describe("discordPlugin", func() {
 				pdk.PDKMock.On("GetConfig", caaEnabledKey).Return("", false)
 				pdk.PDKMock.On("GetConfig", activityNameKey).Return("Custom", true)
 				pdk.PDKMock.On("GetConfig", activityNameTemplateKey).Return(template, templateExists)
+				pdk.PDKMock.On("GetConfig", statusDisplayTypeKey).Return("", false)
 				pdk.PDKMock.On("GetConfig", spotifyLinksKey).Return("", false)
 				pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
 

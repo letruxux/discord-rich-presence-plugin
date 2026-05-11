@@ -20,9 +20,7 @@
     },
     "websocket": {
       "reason": "To maintain real-time connection with Discord gateway",
-      "requiredHosts": [
-        "gateway.discord.gg"
-      ]
+      "requiredHosts": ["gateway.discord.gg"]
     },
     "cache": {
       "reason": "To store connection state and sequence numbers"
@@ -53,13 +51,7 @@
           "type": "string",
           "title": "Activity Name Display",
           "description": "Choose what to display as the activity name in Discord Rich Presence",
-          "enum": [
-            "Default",
-            "Track",
-            "Album",
-            "Artist",
-            "Custom"
-          ],
+          "enum": ["Default", "Track", "Album", "Artist", "Custom"],
           "default": "Default"
         },
         "activitynametemplate": {
@@ -91,6 +83,13 @@
           "description": "Only enable Discord Rich Presence when playback is started from this specific player. Leave empty to enable for all players. Example: Navic",
           "default": ""
         },
+        "statusdisplaytype": {
+          "type": "string",
+          "title": "Status Display Type",
+          "description": "Controls how the activity is shown in Discord's member list",
+          "enum": ["Artist", "Selected Name Display", "Song"],
+          "default": "Selected Name Display"
+        },
         "users": {
           "type": "array",
           "title": "User Tokens",
@@ -112,17 +111,11 @@
                 "minLength": 1
               }
             },
-            "required": [
-              "username",
-              "token"
-            ]
+            "required": ["username", "token"]
           }
         }
       },
-      "required": [
-        "clientid",
-        "users"
-      ]
+      "required": ["clientid", "users"]
     },
     "uiSchema": {
       "type": "VerticalLayout",
@@ -166,6 +159,13 @@
         {
           "type": "Control",
           "scope": "#/properties/playername"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/statusdisplaytype",
+          "options": {
+            "format": "radio"
+          }
         },
         {
           "type": "Control",
