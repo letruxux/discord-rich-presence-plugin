@@ -142,6 +142,7 @@ var _ = Describe("discordPlugin", func() {
 			pdk.PDKMock.On("GetConfig", caaEnabledKey).Return("", false)
 			pdk.PDKMock.On("GetConfig", activityNameKey).Return("", false)
 			pdk.PDKMock.On("GetConfig", spotifyLinksKey).Return("", false)
+			pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
 		}
 
 		setupImageMocks := func() {
@@ -153,6 +154,7 @@ var _ = Describe("discordPlugin", func() {
 
 		Context("starting state", func() {
 			It("is a no-op", func() {
+				pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
 				err := plugin.PlaybackReport(baseRequest("starting"))
 				Expect(err).ToNot(HaveOccurred())
 			})
@@ -160,6 +162,7 @@ var _ = Describe("discordPlugin", func() {
 
 		Context("unknown state", func() {
 			It("is a no-op", func() {
+				pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
 				err := plugin.PlaybackReport(baseRequest("unknown"))
 				Expect(err).ToNot(HaveOccurred())
 			})
@@ -169,6 +172,7 @@ var _ = Describe("discordPlugin", func() {
 			It("returns not authorized error when user not in config", func() {
 				pdk.PDKMock.On("GetConfig", clientIDKey).Return("test-client-id", true)
 				pdk.PDKMock.On("GetConfig", usersKey).Return(`[{"username":"otheruser","token":"token"}]`, true)
+				pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
 
 				err := plugin.PlaybackReport(baseRequest("playing"))
 				Expect(err).To(HaveOccurred())
@@ -242,6 +246,7 @@ var _ = Describe("discordPlugin", func() {
 
 		Context("stopped state", func() {
 			It("clears activity and disconnects", func() {
+				pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
 				host.WebSocketMock.On("SendText", "testuser", mock.MatchedBy(func(msg string) bool {
 					return strings.Contains(msg, `"op":3`) && strings.Contains(msg, `"activities":null`)
 				})).Return(nil)
@@ -255,6 +260,7 @@ var _ = Describe("discordPlugin", func() {
 
 		Context("expired state", func() {
 			It("clears activity and disconnects (same as stopped)", func() {
+				pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
 				host.WebSocketMock.On("SendText", "testuser", mock.MatchedBy(func(msg string) bool {
 					return strings.Contains(msg, `"op":3`) && strings.Contains(msg, `"activities":null`)
 				})).Return(nil)
@@ -274,6 +280,7 @@ var _ = Describe("discordPlugin", func() {
 				pdk.PDKMock.On("GetConfig", caaEnabledKey).Return("", false)
 				pdk.PDKMock.On("GetConfig", activityNameKey).Return(configValue, configExists)
 				pdk.PDKMock.On("GetConfig", spotifyLinksKey).Return("", false)
+				pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
 
 				setupConnectMocks()
 				setupImageMocks()
@@ -304,6 +311,7 @@ var _ = Describe("discordPlugin", func() {
 				pdk.PDKMock.On("GetConfig", activityNameKey).Return("Custom", true)
 				pdk.PDKMock.On("GetConfig", activityNameTemplateKey).Return(template, templateExists)
 				pdk.PDKMock.On("GetConfig", spotifyLinksKey).Return("", false)
+				pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
 
 				setupConnectMocks()
 				setupImageMocks()

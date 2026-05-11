@@ -85,6 +85,12 @@
           "description": "When enabled, clicking the track title or album art in Discord opens the corresponding Spotify page",
           "default": false
         },
+        "playername": {
+          "type": "string",
+          "title": "Player Name Filter",
+          "description": "Only enable Discord Rich Presence when playback is started from this specific player. Leave empty to enable for all players. Example: Navic",
+          "default": ""
+        },
         "users": {
           "type": "array",
           "title": "User Tokens",
@@ -156,6 +162,10 @@
         {
           "type": "Control",
           "scope": "#/properties/spotifylinks"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/playername"
         },
         {
           "type": "Control",
