@@ -3,8 +3,6 @@
 [![Build](https://github.com/navidrome/discord-rich-presence-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/navidrome/discord-rich-presence-plugin/actions/workflows/build.yml)
 [![Latest](https://img.shields.io/github/v/release/navidrome/discord-rich-presence-plugin)](https://github.com/navidrome/discord-rich-presence-plugin/releases/latest/download/discord-rich-presence.ndp)
 
-**Attention: This version (2.0.0-beta) requires a development build of Navidrome with PlaybackReport support ([navidrome/navidrome#5452](https://github.com/navidrome/navidrome/pull/5452)). It will not work with any released version of Navidrome.**
-
 **For Navidrome 0.61.x, use [plugin v1.0.0](https://github.com/navidrome/discord-rich-presence-plugin/releases/tag/v1.0.0).**
 
 This plugin integrates Navidrome with Discord Rich Presence, displaying your currently playing track in your Discord status. 
