@@ -485,10 +485,12 @@ var _ = Describe("discordRPC", func() {
 	})
 
 	Describe("clearActivity", func() {
-		It("sends presence update with nil activities", func() {
+		It("clears activities and sets status to invisible", func() {
 			pdk.PDKMock.On("Log", mock.Anything, mock.Anything).Maybe()
 			host.WebSocketMock.On("SendText", "testuser", mock.MatchedBy(func(msg string) bool {
-				return strings.Contains(msg, `"op":3`) && strings.Contains(msg, `"activities":null`)
+				return strings.Contains(msg, `"op":3`) &&
+					strings.Contains(msg, `"activities":[]`) &&
+					strings.Contains(msg, `"status":"invisible"`)
 			})).Return(nil)
 
 			err := r.clearActivity("testuser")
