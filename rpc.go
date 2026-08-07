@@ -270,10 +270,14 @@ func (r *discordRPC) sendActivity(clientID, username, token string, data activit
 	return r.sendMessage(username, presenceOpCode, presence)
 }
 
-// clearActivity clears the Discord activity for a user.
+// clearActivity clears the Discord activity for a user, setting the account
+// to invisible so it does not fall back to the default "online" status.
 func (r *discordRPC) clearActivity(username string) error {
 	pdk.Log(pdk.LogInfo, fmt.Sprintf("Clearing activity for user %s", username))
-	return r.sendMessage(username, presenceOpCode, presencePayload{})
+	return r.sendMessage(username, presenceOpCode, presencePayload{
+		Activities: []activity{},
+		Status:     "invisible",
+	})
 }
 
 // ============================================================================
@@ -454,4 +458,3 @@ func (r *discordRPC) handleHeartbeatCallback(username string) error {
 	}
 	return nil
 }
-
