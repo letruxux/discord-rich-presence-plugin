@@ -250,7 +250,9 @@ var _ = Describe("discordPlugin", func() {
 			It("clears activity and disconnects", func() {
 				pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
 				host.WebSocketMock.On("SendText", "testuser", mock.MatchedBy(func(msg string) bool {
-					return strings.Contains(msg, `"op":3`) && strings.Contains(msg, `"activities":null`)
+					return strings.Contains(msg, `"op":3`) &&
+						strings.Contains(msg, `"activities":[]`) &&
+						strings.Contains(msg, `"status":"invisible"`)
 				})).Return(nil)
 				host.SchedulerMock.On("CancelSchedule", "testuser").Return(nil)
 				host.WebSocketMock.On("CloseConnection", "testuser", int32(1000), "Navidrome disconnect").Return(nil)
@@ -264,7 +266,9 @@ var _ = Describe("discordPlugin", func() {
 			It("clears activity and disconnects (same as stopped)", func() {
 				pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
 				host.WebSocketMock.On("SendText", "testuser", mock.MatchedBy(func(msg string) bool {
-					return strings.Contains(msg, `"op":3`) && strings.Contains(msg, `"activities":null`)
+					return strings.Contains(msg, `"op":3`) &&
+						strings.Contains(msg, `"activities":[]`) &&
+						strings.Contains(msg, `"status":"invisible"`)
 				})).Return(nil)
 				host.SchedulerMock.On("CancelSchedule", "testuser").Return(nil)
 				host.WebSocketMock.On("CloseConnection", "testuser", int32(1000), "Navidrome disconnect").Return(nil)
