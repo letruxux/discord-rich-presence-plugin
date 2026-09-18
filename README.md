@@ -161,6 +161,10 @@ Access the plugin configuration in Navidrome: **Settings > Plugins > Discord Ric
 - **What it does**: When enabled, clicking the track title or album art in Discord opens the corresponding Spotify page
 - **How it works**: Track URLs are resolved via [ListenBrainz Labs](https://labs.api.listenbrainz.org) for direct Spotify links, falling back to Spotify search when no match is found
 
+#### Show Paused State
+- **Default**: Enabled
+- **What it does**: When playback is paused, the Rich Presence stays visible with a pause icon and frozen timestamp. Disable this to hide your Discord presence entirely whenever playback is paused.
+
 #### Users
 Add each Navidrome user who wants Discord Rich Presence. For each user, provide:
 - **Username**: The Navidrome login username (case-sensitive)

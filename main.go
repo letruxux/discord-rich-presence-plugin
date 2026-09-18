@@ -32,6 +32,7 @@ const (
 	uguuEnabledKey          = "uguuenabled"
 	playerNameKey          = "playername"
 	statusDisplayTypeKey   = "statusdisplaytype"
+	showPausedKey          = "showpaused"
 )
 
 const (
@@ -169,6 +170,10 @@ func (p *discordPlugin) PlaybackReport(input scrobbler.PlaybackReportRequest) er
 	case statePlaying:
 		return p.handlePlayingOrPaused(input)
 	case statePaused:
+		if !shouldShowPaused() {
+			pdk.Log(pdk.LogInfo, fmt.Sprintf("Paused state hidden for user %s, clearing presence", input.Username))
+			return p.handleStopped(input)
+		}
 		return p.handlePlayingOrPaused(input)
 	case stateStopped, stateExpired:
 		return p.handleStopped(input)
@@ -183,6 +188,14 @@ func isPlayerAllowed(playerName string) bool {
 		return true
 	}
 	return playerName == allowedPlayer
+}
+
+func shouldShowPaused() bool {
+	showPaused, ok := pdk.GetConfig(showPausedKey)
+	if !ok || showPaused == "" {
+		return true
+	}
+	return showPaused == "true"
 }
 
 func formatRequest(input scrobbler.PlaybackReportRequest) string {

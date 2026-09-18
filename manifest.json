@@ -90,6 +90,12 @@
           "enum": ["Artist", "Selected Name Display", "Song"],
           "default": "Selected Name Display"
         },
+        "showpaused": {
+          "type": "boolean",
+          "title": "Show Paused State",
+          "description": "When enabled, Discord Rich Presence stays visible (with a pause icon) while playback is paused. Disable to hide your presence entirely when paused.",
+          "default": true
+        },
         "users": {
           "type": "array",
           "title": "User Tokens",
@@ -166,6 +172,10 @@
           "options": {
             "format": "radio"
           }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/showpaused"
         },
         {
           "type": "Control",

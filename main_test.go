@@ -145,6 +145,7 @@ var _ = Describe("discordPlugin", func() {
 			pdk.PDKMock.On("GetConfig", statusDisplayTypeKey).Return("", false)
 			pdk.PDKMock.On("GetConfig", spotifyLinksKey).Return("", false)
 			pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
+			pdk.PDKMock.On("GetConfig", showPausedKey).Return("", false)
 		}
 
 		setupImageMocks := func() {
@@ -243,6 +244,21 @@ var _ = Describe("discordPlugin", func() {
 				Expect(sentPayload).ToNot(ContainSubstring(`"end":`))
 				// Paused start = Timestamp * 1000 = 1714600000000
 				Expect(sentPayload).To(ContainSubstring(`"start":1714600000000`))
+			})
+
+			It("clears activity and disconnects when paused state is hidden", func() {
+				pdk.PDKMock.On("GetConfig", playerNameKey).Return("", false)
+				pdk.PDKMock.On("GetConfig", showPausedKey).Return("false", true)
+				host.WebSocketMock.On("SendText", "testuser", mock.MatchedBy(func(msg string) bool {
+					return strings.Contains(msg, `"op":3`) &&
+						strings.Contains(msg, `"activities":[]`) &&
+						strings.Contains(msg, `"status":"invisible"`)
+				})).Return(nil)
+				host.SchedulerMock.On("CancelSchedule", "testuser").Return(nil)
+				host.WebSocketMock.On("CloseConnection", "testuser", int32(1000), "Navidrome disconnect").Return(nil)
+
+				err := plugin.PlaybackReport(baseRequest("paused"))
+				Expect(err).ToNot(HaveOccurred())
 			})
 		})
 
